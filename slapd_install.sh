@@ -172,7 +172,7 @@ uid: xixi
 uidNumber: 3001
 homeDirectory: /home/xixi
 gidNumber: 3001
-description: xixi@xjtlu.edu.cn
+description: xixi@bio.cluster
 cn: xixi
 sn: xixi
 objectClass: posixAccount
@@ -201,7 +201,7 @@ if [[ ${CENTOS8ROCKYLINUX} != "4" ]];then
     # "add group, user and test user"
     # "Use the LDIF file to import configuration information or modify attribute values separately,"
     # "and you can use the following commands."
-    # "example: ldapadd -x -D 'cn=bioroot,dc=bio,dc=cluster' -wXJTLU@admin2021 -f QueryUserInfo.ldif"
+    # "example: ldapadd -x -D 'cn=bioroot,dc=bio,dc=cluster' -wBioxi2021 -f QueryUserInfo.ldif"
     for GUINFO in QueryUserInfo.ldif queryuser.ldif biounit.ldif biogroup.ldif biouser.ldif testuser_xixi.ldif
     do
         ldapadd -x -D 'cn=bioroot,dc=bio,dc=cluster' -wBioxi2021 -f $GUINFO
