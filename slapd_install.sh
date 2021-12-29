@@ -147,41 +147,6 @@ objectClass: top
 description: Query LDAP user information.
 userPassword:: e1NIQX0zNGEvbG9tMm9USHpHY2JkdnF1TUNHOFg4eWs9
 EOF
-cat > biounit.ldif <<EOF
-dn: ou=biounit,dc=cm,dc=cluster
-objectClass: organizationalUnit
-ou: biounit
-EOF
-cat > biogroup.ldif <<EOF
-dn: cn=biogroup,ou=biounit,dc=cm,dc=cluster
-changetype: add
-gidNumber: 3001
-cn: biogroup
-objectClass: posixGroup
-objectClass: top
-EOF
-cat > biouser.ldif <<EOF
-dn: ou=biouser,dc=cm,dc=cluster
-objectClass: organizationalUnit
-ou: biouser
-EOF
-cat > testuser_xixi.ldif <<EOF
-dn: uid=xixi,ou=biouser,dc=cm,dc=cluster
-changetype: add
-uid: xixi
-uidNumber: 3001
-homeDirectory: /home/xixi
-gidNumber: 3001
-description: xixi@xjtlu.edu.cn
-cn: xixi
-sn: xixi
-objectClass: posixAccount
-objectClass: organizationalPerson
-objectClass: person
-objectClass: top
-loginShell: /bin/bash
-userPassword:: e1NIQX1waFV0dmlrOUlZalRGQ0pCUDR6WFZoVCtkQVk9
-EOF
 
 CENTOS8ROCKYLINUX=$(uname -r | awk -F"." '{print $1}')
 if [[ ${CENTOS8ROCKYLINUX} != "4" ]];then
@@ -201,8 +166,8 @@ if [[ ${CENTOS8ROCKYLINUX} != "4" ]];then
     # "add group, user and test user"
     # "Use the LDIF file to import configuration information or modify attribute values separately,"
     # "and you can use the following commands."
-    # "example: ldapadd -x -D 'cn=bioroot,dc=cm,dc=cluster' -wXJTLU@admin2021 -f QueryUserInfo.ldif"
-    for GUINFO in QueryUserInfo.ldif queryuser.ldif biounit.ldif biogroup.ldif biouser.ldif testuser_xixi.ldif
+    # "example: ldapadd -x -D 'cn=bioroot,dc=cm,dc=cluster' -wQueryInfo@2021 -f QueryUserInfo.ldif"
+    for GUINFO in QueryUserInfo.ldif queryuser.ldif
     do
         ldapadd -x -D 'cn=bioroot,dc=cm,dc=cluster' -wBioxi2021 -f $GUINFO
     done
@@ -224,7 +189,7 @@ else
     ldapadd -x -D 'cn=bioroot,dc=cm,dc=cluster' -wBioxi2021 -f base_dc.ldif
     # "modify EXTERNAL"
     ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f acl.ldif
-    for GUINFO in QueryUserInfo.ldif queryuser.ldif biounit.ldif biogroup.ldif biouser.ldif testuser_xixi.ldif
+    for GUINFO in QueryUserInfo.ldif queryuser.ldif
     do
         ldapadd -x -D 'cn=bioroot,dc=cm,dc=cluster' -wBioxi2021 -f $GUINFO
     done
@@ -232,4 +197,4 @@ fi
 
 # delete ldif
 rm -rf admin.ldif add_memberof.ldif refint.ldif disbale_anonymous.ldif acl.ldif base_dc.ldif \
-QueryUserInfo.ldif queryuser.ldif biounit.ldif biogroup.ldif biouser.ldif testuser_xixi.ldif
+QueryUserInfo.ldif queryuser.ldif
