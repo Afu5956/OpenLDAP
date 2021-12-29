@@ -49,10 +49,10 @@ cat > admin.ldif <<EOF
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 replace: olcSuffix
-olcSuffix: dc=bio,dc=cluster
+olcSuffix: dc=cm,dc=cluster
 -
 replace: olcRootDN
-olcRootDN: cn=bioroot,dc=bio,dc=cluster
+olcRootDN: cn=bioroot,dc=cm,dc=cluster
 -
 replace: olcRootPW
 olcRootPW: $ROOTPW
@@ -61,7 +61,7 @@ dn: olcDatabase={1}monitor,cn=config
 changetype: modify
 replace: olcAccess
 olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read by \
-dn.base="cn=bioroot,dc=bio,dc=cluster" read by * none
+dn.base="cn=bioroot,dc=cm,dc=cluster" read by * none
 EOF
 cat > add_memberof.ldif <<EOF
 dn: cn=module{0},cn=config
@@ -119,25 +119,25 @@ cat > acl.ldif <<EOF
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 replace: olcAccess
-olcAccess: {0}to attrs=userPassword,shadowLastChange by dn="cn=bioroot,dc=bio,dc=cluster" write by anonymous auth by \
+olcAccess: {0}to attrs=userPassword,shadowLastChange by dn="cn=bioroot,dc=cm,dc=cluster" write by anonymous auth by \
 self write by * none
-olcAccess: {2}to by dn="cn=bioroot,dc=bio,dc=cluster" write by * read
+olcAccess: {2}to by dn="cn=bioroot,dc=cm,dc=cluster" write by * read
 EOF
 cat > base_dc.ldif <<EOF
-dn: dc=bio,dc=cluster
+dn: dc=cm,dc=cluster
 o: company
 objectClass: top
 objectclass: dcObject
 objectclass: organization
 EOF
 cat > QueryUserInfo.ldif <<EOF
-dn: ou=queryadmin,dc=bio,dc=cluster
+dn: ou=queryadmin,dc=cm,dc=cluster
 objectClass: organizationalUnit
 ou: biounit
 description: Query LDAP user information.
 EOF
 cat > queryuser.ldif <<EOF
-dn: cn=queryuserinfo,ou=queryadmin,dc=bio,dc=cluster
+dn: cn=queryuserinfo,ou=queryadmin,dc=cm,dc=cluster
 changetype: add
 cn: queryuserinfo
 sn: queryuserinfo
@@ -148,12 +148,12 @@ description: Query LDAP user information.
 userPassword:: e1NIQX0zNGEvbG9tMm9USHpHY2JkdnF1TUNHOFg4eWs9
 EOF
 cat > biounit.ldif <<EOF
-dn: ou=biounit,dc=bio,dc=cluster
+dn: ou=biounit,dc=cm,dc=cluster
 objectClass: organizationalUnit
 ou: biounit
 EOF
 cat > biogroup.ldif <<EOF
-dn: cn=biogroup,ou=biounit,dc=bio,dc=cluster
+dn: cn=biogroup,ou=biounit,dc=cm,dc=cluster
 changetype: add
 gidNumber: 3001
 cn: biogroup
@@ -161,18 +161,18 @@ objectClass: posixGroup
 objectClass: top
 EOF
 cat > biouser.ldif <<EOF
-dn: ou=biouser,dc=bio,dc=cluster
+dn: ou=biouser,dc=cm,dc=cluster
 objectClass: organizationalUnit
 ou: biouser
 EOF
 cat > testuser_xixi.ldif <<EOF
-dn: uid=xixi,ou=biouser,dc=bio,dc=cluster
+dn: uid=xixi,ou=biouser,dc=cm,dc=cluster
 changetype: add
 uid: xixi
 uidNumber: 3001
 homeDirectory: /home/xixi
 gidNumber: 3001
-description: xixi@bio.cluster
+description: xixi@xjtlu.edu.cn
 cn: xixi
 sn: xixi
 objectClass: posixAccount
@@ -196,15 +196,15 @@ if [[ ${CENTOS8ROCKYLINUX} != "4" ]];then
         ldapadd -Q -Y EXTERNAL -H ldapi:/// -f $ADDEXTERNAL
     done
     # "base dc information, user password policies."
-    ldapadd -x -D 'cn=bioroot,dc=bio,dc=cluster' -wBioxi2021 -f base_dc.ldif
+    ldapadd -x -D 'cn=bioroot,dc=cm,dc=cluster' -wBioxi2021 -f base_dc.ldif
     ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f acl.ldif
     # "add group, user and test user"
     # "Use the LDIF file to import configuration information or modify attribute values separately,"
     # "and you can use the following commands."
-    # "example: ldapadd -x -D 'cn=bioroot,dc=bio,dc=cluster' -wBioxi2021 -f QueryUserInfo.ldif"
+    # "example: ldapadd -x -D 'cn=bioroot,dc=cm,dc=cluster' -wXJTLU@admin2021 -f QueryUserInfo.ldif"
     for GUINFO in QueryUserInfo.ldif queryuser.ldif biounit.ldif biogroup.ldif biouser.ldif testuser_xixi.ldif
     do
-        ldapadd -x -D 'cn=bioroot,dc=bio,dc=cluster' -wBioxi2021 -f $GUINFO
+        ldapadd -x -D 'cn=bioroot,dc=cm,dc=cluster' -wBioxi2021 -f $GUINFO
     done
 else
     for MODIFYLDIF in acl.ldif refint.ldif admin.ldif add_memberof.ldif;do
@@ -221,12 +221,12 @@ else
         ldapadd -Q -Y EXTERNAL -H ldapi:/// -f $ADDEXTERNAL
     done
     # "Base dc information, user password policies."
-    ldapadd -x -D 'cn=bioroot,dc=bio,dc=cluster' -wBioxi2021 -f base_dc.ldif
+    ldapadd -x -D 'cn=bioroot,dc=cm,dc=cluster' -wBioxi2021 -f base_dc.ldif
     # "modify EXTERNAL"
     ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f acl.ldif
     for GUINFO in QueryUserInfo.ldif queryuser.ldif biounit.ldif biogroup.ldif biouser.ldif testuser_xixi.ldif
     do
-        ldapadd -x -D 'cn=bioroot,dc=bio,dc=cluster' -wBioxi2021 -f $GUINFO
+        ldapadd -x -D 'cn=bioroot,dc=cm,dc=cluster' -wBioxi2021 -f $GUINFO
     done
 fi
 
