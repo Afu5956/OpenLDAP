@@ -12,15 +12,17 @@ Regarding the LDAP ROOT password, you can modify the variable "ROOTPW" for assig
 Regarding schema, all schemas are installed by default. You can delete as needed, and it depends on your choice.
 
 
-Default configuration
-# DN and DN admin
+# Default configuration
+DN: Username and Password
+```
 default DN: dc=cm,dc=cluster
-
 default DN admin: cn=bioroot,dc=cm,dc=cluster
-
 default DN admin password: Bioxi2021
+```
 
-# Anonymous query is disabled by default. The client and server communicate to query users and use specified users to query LDAP DB user information.
+Anonymous query is disabled by default. 
+The client and server communicate to query users and use specified users to query LDAP DB user information.
+```
 query user: cn=queryuserinfo,ou=queryadmin,dc=cm,dc=cluster
-
 query user password: QueryInfo@2021
+```
